@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Labour MP Resignation Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -29,10 +30,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+
+    /* FIXED FOR MOBILE */
+    justify-content: flex-start;
+
     padding: 2rem 1.25rem;
     text-align: center;
     gap: 0;
+
+    /* MOBILE SAFETY */
+    overflow-x: hidden;
   }
 
   /* LIVE DOT */
@@ -100,6 +107,7 @@
     width: 100%;
     max-width: 460px;
   }
+
   .bar-labels {
     display: flex;
     justify-content: space-between;
@@ -110,6 +118,7 @@
     color: var(--muted);
     margin-bottom: 9px;
   }
+
   .bar-track {
     width: 100%;
     height: 4px;
@@ -118,6 +127,7 @@
     overflow: visible;
     position: relative;
   }
+
   .bar-fill {
     height: 100%;
     background: var(--red);
@@ -125,6 +135,7 @@
     transition: width 1.1s cubic-bezier(0.4,0,0.2,1);
     position: relative;
   }
+
   .bar-fill::after {
     content: '';
     position: absolute;
@@ -134,6 +145,7 @@
     border-radius: 50%;
     box-shadow: 0 0 0 3px #0d0d0d, 0 0 0 4px var(--red);
   }
+
   .bar-fill.done        { background: var(--gold); }
   .bar-fill.done::after { background: var(--gold); box-shadow: 0 0 0 3px #0d0d0d, 0 0 0 4px var(--gold); }
 
@@ -151,6 +163,7 @@
     color: var(--muted);
     transition: color 0.5s, border-color 0.5s, background 0.5s;
   }
+
   .caption.done {
     color: var(--gold);
     border-color: rgba(212,160,23,0.4);
@@ -167,6 +180,7 @@
   }
 </style>
 </head>
+
 <body>
 
 <div class="live"><div class="dot"></div>Live tracker</div>
@@ -175,18 +189,16 @@
 
 <div class="number" id="num">–</div>
 
-<div class="label-bot">
-  <strong>Labour MPs</strong> have publicly called on <strong>Keir Starmer</strong> to resign
-</div>
-
 <div class="bar-wrap">
   <div class="bar-labels">
     <span>Leadership contest threshold</span>
     <span><span id="count">0</span>&thinsp;/&thinsp;81</span>
   </div>
+
   <div class="bar-track">
     <div class="bar-fill" id="fill" style="width:0%"></div>
   </div>
+
   <div class="caption" id="caption">Leadership contest triggered</div>
 </div>
 
@@ -204,6 +216,7 @@
       const raw  = await res.text();
       const json = JSON.parse(raw.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, ''));
       const rows = json.table?.rows || [];
+
       const names = rows
         .map(r => r.c?.[0]?.v ? String(r.c[0].v).trim() : null)
         .filter(v => v && !/^name$/i.test(v));
@@ -217,14 +230,17 @@
   function render(n) {
     const el   = document.getElementById('num');
     const prev = parseInt(el.textContent) || 0;
+
     el.textContent = n;
+
     if (n !== prev && prev > 0) {
       el.classList.add('pop');
       setTimeout(() => el.classList.remove('pop'), 400);
     }
 
     document.getElementById('count').textContent = n;
-    document.getElementById('fill').style.width  = Math.min(100, n / THRESHOLD * 100) + '%';
+    document.getElementById('fill').style.width =
+      Math.min(100, n / THRESHOLD * 100) + '%';
 
     const done = n >= THRESHOLD;
     document.getElementById('fill').classList.toggle('done', done);
@@ -238,5 +254,6 @@
   load();
   setInterval(load, 60000);
 </script>
+
 </body>
 </html>
