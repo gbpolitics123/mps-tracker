@@ -1,358 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Labour MP Resignation Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-#labour-tracker-widget *,
-#labour-tracker-widget *::before,
-#labour-tracker-widget *::after{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+  /* ── REPLACE THIS WITH YOUR SHEET ID ── */
+  /* Sheet must be shared: File → Share → "Anyone with the link" = Viewer */
+  /* Column A: MP names (row 1 = header "Name", row 2+ = MP names) */
 
-#labour-tracker-widget{
-  --red:#C8102E;
-  --red-dark:#8B0000;
-  --gold:#D4A017;
-  --bg:#0d0d0d;
-  --surface:#161616;
-  --surface2:#1e1e1e;
-  --border:rgba(255,255,255,0.08);
-  --text:#f0ece4;
-  --muted:#888;
-  --font-display:'Bebas Neue',sans-serif;
-  --font-body:'Crimson Pro',Georgia,serif;
-  --font-mono:'DM Mono',monospace;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  width:100%;
-  max-width:100%;
-  overflow:hidden;
-  background:var(--bg);
-  color:var(--text);
-  font-family:var(--font-body);
-  padding:18px 14px;
-  -webkit-text-size-adjust:100%;
-}
-
-#labour-tracker-widget .widget{
-  width:100%;
-  max-width:640px;
-  margin:auto;
-}
-
-#labour-tracker-widget .header{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:24px;
-  padding-bottom:14px;
-  border-bottom:1px solid var(--border);
-}
-
-#labour-tracker-widget .rose{
-  font-size:28px;
-  line-height:1;
-  flex-shrink:0;
-}
-
-#labour-tracker-widget .header-text{
-  flex:1;
-  min-width:0;
-}
-
-#labour-tracker-widget .label-live{
-  font-family:var(--font-mono);
-  font-size:10px;
-  letter-spacing:.12em;
-  color:var(--red);
-  text-transform:uppercase;
-  display:flex;
-  align-items:center;
-  gap:6px;
-  margin-bottom:3px;
-}
-
-#labour-tracker-widget .dot{
-  width:6px;
-  height:6px;
-  background:var(--red);
-  border-radius:50%;
-  animation:trackerPulse 1.8s ease-in-out infinite;
-  flex-shrink:0;
-}
-
-@keyframes trackerPulse{
-  0%,100%{opacity:1;transform:scale(1);}
-  50%{opacity:.4;transform:scale(.7);}
-}
-
-#labour-tracker-widget h1{
-  font-family:var(--font-body);
-  font-size:14px;
-  line-height:1.4;
-  font-weight:600;
-  color:rgba(240,236,228,.75);
-  word-break:break-word;
-}
-
-#labour-tracker-widget .last-updated{
-  font-family:var(--font-mono);
-  font-size:10px;
-  color:var(--muted);
-  margin-top:4px;
-  line-height:1.4;
-}
-
-#labour-tracker-widget .count-block{
-  text-align:center;
-  padding:10px 0 18px;
-}
-
-#labour-tracker-widget .count-number{
-  font-family:var(--font-display);
-  font-size:clamp(72px,22vw,150px);
-  line-height:.9;
-  color:var(--red);
-  overflow-wrap:break-word;
-}
-
-#labour-tracker-widget .count-label{
-  font-size:clamp(14px,3.8vw,18px);
-  line-height:1.5;
-  margin-top:10px;
-  color:rgba(240,236,228,.7);
-  word-break:break-word;
-}
-
-#labour-tracker-widget .count-label strong{
-  color:var(--text);
-}
-
-#labour-tracker-widget .progress-section{
-  margin-top:20px;
-}
-
-#labour-tracker-widget .progress-meta{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-  margin-bottom:10px;
-  flex-wrap:wrap;
-}
-
-#labour-tracker-widget .progress-meta div{
-  font-family:var(--font-mono);
-  font-size:11px;
-  color:var(--muted);
-  letter-spacing:.05em;
-  text-transform:uppercase;
-  line-height:1.4;
-}
-
-#labour-tracker-widget .progress-track{
-  width:100%;
-  height:6px;
-  background:var(--surface2);
-  border-radius:999px;
-  overflow:hidden;
-}
-
-#labour-tracker-widget .progress-fill{
-  height:100%;
-  width:0%;
-  background:var(--red);
-  transition:width .6s ease;
-}
-
-#labour-tracker-widget .btn-row{
-  display:flex;
-  gap:10px;
-  margin-top:22px;
-}
-
-#labour-tracker-widget .btn{
-  flex:1;
-  border:none;
-  border-radius:8px;
-  padding:14px 14px;
-  cursor:pointer;
-  font-family:var(--font-mono);
-  font-size:11px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  background:var(--surface);
-  color:var(--text);
-  min-height:48px;
-  width:100%;
-  -webkit-appearance:none;
-  appearance:none;
-}
-
-#labour-tracker-widget .btn-primary{
-  background:rgba(200,16,46,.12);
-  border:1px solid var(--red-dark);
-  color:#ffb4c0;
-}
-
-#labour-tracker-widget .names-panel{
-  margin-top:18px;
-  display:none;
-}
-
-#labour-tracker-widget .names-panel.open{
-  display:block;
-}
-
-#labour-tracker-widget .names-inner{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
-  width:100%;
-}
-
-#labour-tracker-widget .names-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:14px 16px;
-  border-bottom:1px solid var(--border);
-}
-
-#labour-tracker-widget .names-title,
-#labour-tracker-widget .names-count-badge{
-  font-family:var(--font-mono);
-  font-size:11px;
-  text-transform:uppercase;
-  line-height:1.4;
-}
-
-#labour-tracker-widget .names-list{
-  list-style:none;
-  width:100%;
-}
-
-#labour-tracker-widget .names-list li{
-  display:flex;
-  gap:12px;
-  padding:12px 16px;
-  border-bottom:1px solid var(--border);
-  width:100%;
-}
-
-#labour-tracker-widget .names-list li:last-child{
-  border-bottom:none;
-}
-
-#labour-tracker-widget .mp-num{
-  width:28px;
-  text-align:right;
-  color:var(--red);
-  font-family:var(--font-mono);
-  flex-shrink:0;
-}
-
-#labour-tracker-widget .mp-name{
-  font-size:15px;
-  line-height:1.5;
-  word-break:break-word;
-  overflow-wrap:anywhere;
-}
-
-#labour-tracker-widget .footer{
-  margin-top:24px;
-  padding-top:14px;
-  border-top:1px solid var(--border);
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-#labour-tracker-widget .footer p{
-  font-family:var(--font-mono);
-  font-size:10px;
-  color:var(--muted);
-  line-height:1.5;
-}
-
-@media(max-width:768px){
-
-  #labour-tracker-widget{
-    padding:16px 12px;
+  :root {
+    --red: #C8102E;
+    --red-dark: #8B0000;
+    --red-glow: rgba(200,16,46,0.15);
+    --gold: #D4A017;
+    --bg: #0d0d0d;
+    --surface: #161616;
+    --surface2: #1e1e1e;
+    --border: rgba(255,255,255,0.08);
+    --text: #f0ece4;
+    --muted: #888;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'Crimson Pro', Georgia, serif;
+    --font-mono: 'DM Mono', monospace;
   }
 
-  #labour-tracker-widget .widget{
-    max-width:100%;
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
   }
 
-  #labour-tracker-widget .count-number{
-    font-size:clamp(68px,24vw,110px);
+  .widget {
+    width: 100%;
+    max-width: 640px;
   }
 
-  #labour-tracker-widget .count-label{
-    font-size:15px;
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .rose { font-size: 28px; line-height: 1; }
+  .header-text { flex: 1; }
+  .label-live {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--red);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+  .header h1 {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(240,236,228,0.7);
+    letter-spacing: 0.02em;
+  }
+  .last-updated {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
   }
 
-  #labour-tracker-widget .btn-row{
-    flex-direction:column;
+  /* ── MAIN COUNT ── */
+  .count-block {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+    position: relative;
+  }
+  .count-number {
+    font-family: var(--font-display);
+    font-size: clamp(96px, 22vw, 160px);
+    line-height: 0.9;
+    color: var(--red);
+    letter-spacing: -0.01em;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .count-number.bump { transform: scale(1.06); }
+  .count-label {
+    font-family: var(--font-body);
+    font-size: clamp(14px, 3vw, 18px);
+    font-weight: 400;
+    font-style: italic;
+    color: rgba(240,236,228,0.65);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+  }
+  .count-label strong {
+    font-style: normal;
+    font-weight: 600;
+    color: var(--text);
   }
 
-  #labour-tracker-widget .btn{
-    width:100%;
+  /* ── PROGRESS BAR ── */
+  .progress-section { margin: 2rem 0; }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .progress-meta-left {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .progress-meta-right {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  .progress-meta-right span {
+    font-weight: 500;
+    color: rgba(240,236,228,0.5);
   }
 
-  #labour-tracker-widget .progress-meta{
-    flex-direction:column;
-    gap:4px;
+  .progress-track {
+    width: 100%;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: visible;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--red);
+    border-radius: 3px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+  }
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -1px; top: -3px;
+    width: 12px; height: 12px;
+    background: var(--red);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--red-dark);
+  }
+  .progress-fill.triggered { background: var(--gold); }
+  .progress-fill.triggered::after { background: var(--gold); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px rgba(212,160,23,0.6); }
+
+  .milestone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    transition: all 0.5s ease;
+  }
+  .milestone.active {
+    border-color: var(--gold);
+    background: rgba(212,160,23,0.08);
+  }
+  .milestone-flag { font-size: 16px; }
+  .milestone-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: color 0.5s ease;
+  }
+  .milestone.active .milestone-text { color: var(--gold); }
+  .milestone-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
   }
 
-  #labour-tracker-widget .footer{
-    flex-direction:column;
+  /* ── BUTTONS ── */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.75rem;
   }
-}
+  .btn {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn:hover { background: var(--surface2); border-color: rgba(255,255,255,0.18); }
+  .btn-primary {
+    border-color: var(--red-dark);
+    background: rgba(200,16,46,0.1);
+    color: #f08090;
+  }
+  .btn-primary:hover { background: rgba(200,16,46,0.2); border-color: var(--red); color: #ffb0bc; }
+  .btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-@media(max-width:480px){
-
-  #labour-tracker-widget{
-    padding:14px 10px;
+  /* ── NAMES PANEL ── */
+  .names-panel {
+    margin-top: 1.5rem;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.6s cubic-bezier(0.4,0,0.2,1), opacity 0.4s ease;
+  }
+  .names-panel.open { max-height: 2000px; opacity: 1; }
+  .names-inner {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .names-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .names-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .names-count-badge {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    background: rgba(200,16,46,0.15);
+    border: 1px solid var(--red-dark);
+    color: #f08090;
+    border-radius: 20px;
   }
 
-  #labour-tracker-widget .header{
-    align-items:flex-start;
-    gap:10px;
+  .names-list { list-style: none; }
+  .names-list li {
+    display: flex;
+    align-items: center;
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 14px;
+    animation: fadeSlideIn 0.3s ease both;
+  }
+  .names-list li:last-child { border-bottom: none; }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to { opacity: 1; transform: none; }
+  }
+  .mp-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--red);
+    min-width: 32px;
+    text-align: right;
+    flex-shrink: 0;
+    opacity: 0.8;
+  }
+  .mp-name {
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--text);
+  }
+  .mp-name em {
+    font-size: 12px;
+    font-style: normal;
+    color: var(--muted);
+    margin-left: 6px;
+    font-family: var(--font-mono);
+  }
+  .names-empty {
+    padding: 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+  }
+  .names-loading {
+    padding: 2rem;
+    text-align: center;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .spin {
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--red);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── ERROR ── */
+  .error-bar {
+    display: none;
+    margin-top: 1rem;
+    padding: 10px 14px;
+    background: rgba(200,16,46,0.08);
+    border: 1px solid var(--red-dark);
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: #f08090;
+    letter-spacing: 0.04em;
+  }
+  .error-bar.visible { display: block; }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer p {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
   }
 
-  #labour-tracker-widget .rose{
-    font-size:24px;
+  @media (max-width: 480px) {
+    .btn-row { flex-direction: column; }
+    .progress-meta { flex-direction: column; gap: 2px; }
   }
-
-  #labour-tracker-widget h1{
-    font-size:13px;
-  }
-
-  #labour-tracker-widget .count-number{
-    font-size:clamp(60px,26vw,90px);
-  }
-
-  #labour-tracker-widget .count-label{
-    font-size:14px;
-    line-height:1.45;
-  }
-
-  #labour-tracker-widget .progress-meta div{
-    font-size:10px;
-  }
-
-  #labour-tracker-widget .names-list li{
-    padding:11px 12px;
-  }
-
-  #labour-tracker-widget .mp-name{
-    font-size:14px;
-  }
-
-  #labour-tracker-widget .footer p{
-    font-size:9px;
-  }
-}
 </style>
+</head>
+<body>
+
+<div class="widget">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="rose">🌹</div>
+    <div class="header-text">
+      <div class="label-live">
+        <div class="dot"></div>
+        Live tracker
+      </div>
+      <h1>Labour MPs calling for Keir Starmer to resign</h1>
+      <div class="last-updated" id="last-updated">Fetching data…</div>
+    </div>
+  </div>
+
+  <!-- COUNT -->
+  <div class="count-block">
+    <div class="count-number" id="count-display">–</div>
+    <div class="count-label">
+      <strong>Labour MPs</strong> have publicly called on
+      <strong>Keir Starmer</strong> to resign as Prime Minister
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-section">
+    <div class="progress-meta">
+      <div class="progress-meta-left">Leadership contest threshold</div>
+      <div class="progress-meta-right"><span id="pct-display">0</span> of 81 MPs</div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+    <div class="milestone" id="milestone">
+      <span class="milestone-flag">⚑</span>
+      <span class="milestone-text">Leadership contest triggered</span>
+      <span class="milestone-count" id="milestone-label">81 MPs required</span>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-row">
+    <button class="btn btn-primary" id="toggle-names-btn" onclick="toggleNames()">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Show names
+    </button>
+    <button class="btn" onclick="refreshData()">
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Refresh
+    </button>
+  </div>
+
+  <div class="error-bar" id="error-bar"></div>
+
+  <!-- NAMES PANEL -->
+  <div class="names-panel" id="names-panel">
+    <div class="names-inner">
+      <div class="names-header">
+        <span class="names-title">MPs on record</span>
+        <span class="names-count-badge" id="names-badge">0</span>
+      </div>
+      <div id="names-body">
+        <div class="names-loading"><div class="spin"></div> Loading…</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>Data sourced from public records & press reports</p>
+    <p id="auto-refresh-label">Auto-refresh: 60s</p>
+  </div>
+
+</div>
+
+<script>
+  /* ════════════════════════════════════════════
+     CONFIGURATION — edit these two lines only
+     ════════════════════════════════════════════ */
+  const SHEET_ID   = 'YOUR_GOOGLE_SHEET_ID_HERE';   // ← paste your sheet ID
+  const SHEET_NAME = 'Sheet1';                        // ← tab name in Google Sheets
+  /* ════════════════════════════════════════════ */
+
+  const THRESHOLD = 81;
+  let   mpNames   = [];
+  let   panelOpen = false;
+
+  /* ── GOOGLE SHEETS FETCH ──────────────────── */
+  async function fetchSheet() {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}&tq=${encodeURIComponent('select A')}`;
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const raw  = await res.text();
+    /* Strip JSONP wrapper: /*O_o*/\ngoogle.visualization.Query.setResponse({...}); */
+    const json = JSON.parse(raw.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, ''));
+    const rows = (json.table && json.table.rows) ? json.table.rows : [];
+    /* First row is header — skip if it contains "name" (case-insensitive) */
+    return rows
+      .map(r => r.c && r.c[0] && r.c[0].v ? String(r.c[0].v).trim() : null)
+      .filter(Boolean)
+      .filter(n => !/^name$/i.test(n));
+  }
+
+  /* ── UPDATE UI ───────────────────────────── */
+  function updateUI(names) {
+    mpNames = names;
+    const count = names.length;
+
+    /* Counter */
+    const el = document.getElementById('count-display');
+    const prev = parseInt(el.textContent) || 0;
+    el.textContent = count;
+    if (count !== prev && prev > 0) {
+      el.classList.add('bump');
+      setTimeout(() => el.classList.remove('bump'), 500);
+    }
+
+    /* Progress bar */
+    const pct = Math.min(100, (count / THRESHOLD) * 100);
+    const fill = document.getElementById('progress-fill');
+    fill.style.width = pct + '%';
+    document.getElementById('pct-display').textContent = count;
+
+    if (count >= THRESHOLD) {
+      fill.classList.add('triggered');
+      const m = document.getElementById('milestone');
+      m.classList.add('active');
+      document.getElementById('milestone-label').textContent = '✓ Threshold reached';
+    } else {
+      fill.classList.remove('triggered');
+      document.getElementById('milestone').classList.remove('active');
+      document.getElementById('milestone-label').textContent = `${THRESHOLD - count} more needed`;
+    }
+
+    /* Timestamp */
+    const now = new Date();
+    document.getElementById('last-updated').textContent =
+      `Last updated ${now.toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'})} · ${now.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'})}`;
+
+    /* Badge */
+    document.getElementById('names-badge').textContent = count;
+
+    /* If panel is open, re-render list */
+    if (panelOpen) renderList();
+
+    hideError();
+  }
+
+  /* ── RENDER NAMES LIST ───────────────────── */
+  function renderList() {
+    const body = document.getElementById('names-body');
+    if (mpNames.length === 0) {
+      body.innerHTML = '<div class="names-empty">No MPs recorded yet</div>';
+      return;
+    }
+    const items = mpNames.map((name, i) => {
+      const ordinal = getOrdinal(i + 1);
+      return `<li style="animation-delay:${Math.min(i * 0.03, 0.6)}s">
+        <span class="mp-num">${i + 1}.</span>
+        <span class="mp-name">${escHtml(name)}<em>${ordinal}</em></span>
+      </li>`;
+    }).join('');
+    body.innerHTML = `<ul class="names-list">${items}</ul>`;
+  }
+
+  /* ── TOGGLE PANEL ───────────────────────── */
+  function toggleNames() {
+    panelOpen = !panelOpen;
+    const panel = document.getElementById('names-panel');
+    const btn   = document.getElementById('toggle-names-btn');
+    panel.classList.toggle('open', panelOpen);
+    btn.innerHTML = panelOpen
+      ? `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><polyline points="18 15 12 9 6 15"/></svg> Hide names`
+      : `<svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Show names`;
+    if (panelOpen) renderList();
+  }
+
+  /* ── REFRESH ─────────────────────────────── */
+  async function refreshData() {
+    hideError();
+    try {
+      const names = await fetchSheet();
+      updateUI(names);
+    } catch (err) {
+      showError(err);
+    }
+  }
+
+  function showError(err) {
+    const bar = document.getElementById('error-bar');
+    bar.textContent = `Could not fetch data: ${err.message}. Check your Sheet ID and sharing settings.`;
+    bar.classList.add('visible');
+    document.getElementById('last-updated').textContent = 'Update failed — using last data';
+  }
+  function hideError() {
+    document.getElementById('error-bar').classList.remove('visible');
+  }
+
+  /* ── HELPERS ─────────────────────────────── */
+  function getOrdinal(n) {
+    const s = ['th','st','nd','rd'], v = n % 100;
+    return n + (s[(v-20)%10] || s[v] || s[0]);
+  }
+  function escHtml(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── INIT ────────────────────────────────── */
+  refreshData();
+  /* Auto-refresh every 60 seconds */
+  setInterval(refreshData, 60000);
+</script>
+</body>
+</html>
