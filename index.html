@@ -7,150 +7,120 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  /* ── 1HRkxPrpNxKeMTVxtl38cdRqTghOKH_jE31PcF1jGpb8 ── */
-  /* Sheet must be shared: File → Share → "Anyone with the link" = Viewer */
-  /* Column A: MP names (row 1 = header "Name", row 2+ = MP names) */
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
     --red: #C8102E;
     --red-dark: #8B0000;
-    --red-glow: rgba(200,16,46,0.15);
     --gold: #D4A017;
     --bg: #0d0d0d;
     --surface: #161616;
     --surface2: #1e1e1e;
     --border: rgba(255,255,255,0.08);
     --text: #f0ece4;
-    --muted: #888;
-    --font-display: 'Bebas Neue', sans-serif;
-    --font-body: 'Crimson Pro', Georgia, serif;
-    --font-mono: 'DM Mono', monospace;
+    --muted: #666;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
   }
 
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: var(--font-body);
-    min-height: 100vh;
+    font-family: 'Crimson Pro', Georgia, serif;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem 1rem;
+    min-height: 100dvh;
+    padding: 2rem 1.5rem;
+    text-align: center;
   }
 
-  .widget {
-    width: 100%;
-    max-width: 640px;
-  }
-
-  .header {
+  .live-badge {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .rose { font-size: 28px; line-height: 1; }
-  .header-text { flex: 1; }
-
-  .label-live {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    color: var(--red);
+    gap: 7px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 2px;
+    color: var(--red);
+    margin-bottom: 1.5rem;
   }
 
   .dot {
-    width: 6px;
-    height: 6px;
+    width: 7px;
+    height: 7px;
     background: var(--red);
     border-radius: 50%;
     animation: pulse 1.8s ease-in-out infinite;
   }
 
   @keyframes pulse {
-    0%,100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.7); }
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.35; transform: scale(0.65); }
   }
 
-  .header h1 {
-    font-family: var(--font-body);
-    font-size: 14px;
+  .headline {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: clamp(15px, 3.5vw, 20px);
     font-weight: 600;
-    color: rgba(240,236,228,0.7);
-    letter-spacing: 0.02em;
-  }
-
-  .last-updated {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--muted);
-    margin-top: 2px;
-  }
-
-  .count-block {
-    text-align: center;
-    padding: 2rem 0 1.5rem;
-    position: relative;
+    color: rgba(240,236,228,0.55);
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    max-width: 480px;
   }
 
   .count-number {
-    font-family: var(--font-display);
-    font-size: clamp(96px, 22vw, 160px);
-    line-height: 0.9;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(140px, 38vw, 260px);
+    line-height: 0.88;
     color: var(--red);
     letter-spacing: -0.01em;
-    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin: 0.3rem 0 0.6rem;
   }
 
-  .count-number.bump { transform: scale(1.06); }
+  .count-number.bump { transform: scale(1.07); }
 
-  .count-label {
-    font-family: var(--font-body);
-    font-size: clamp(14px, 3vw, 18px);
-    font-weight: 400;
+  .subline {
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: clamp(15px, 3.5vw, 20px);
     font-style: italic;
-    color: rgba(240,236,228,0.65);
-    margin-top: 0.5rem;
+    color: rgba(240,236,228,0.45);
     line-height: 1.4;
+    max-width: 440px;
+    margin-bottom: 2.5rem;
   }
 
-  .count-label strong {
+  .subline strong {
     font-style: normal;
     font-weight: 600;
-    color: var(--text);
+    color: rgba(240,236,228,0.75);
   }
 
-  .progress-section { margin: 2rem 0; }
+  .progress-section {
+    width: 100%;
+    max-width: 500px;
+  }
 
   .progress-meta {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 10px;
-  }
-
-  .progress-meta-left,
-  .progress-meta-right {
-    font-family: var(--font-mono);
+    font-family: 'DM Mono', monospace;
     font-size: 11px;
-    color: var(--muted);
     letter-spacing: 0.06em;
     text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
   }
 
   .progress-track {
     width: 100%;
-    height: 6px;
+    height: 5px;
     background: var(--surface2);
     border-radius: 3px;
     overflow: visible;
@@ -161,7 +131,7 @@
     height: 100%;
     background: var(--red);
     border-radius: 3px;
-    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
   }
 
@@ -169,214 +139,98 @@
     content: '';
     position: absolute;
     right: -1px;
-    top: -3px;
-    width: 12px;
-    height: 12px;
+    top: -4px;
+    width: 13px;
+    height: 13px;
     background: var(--red);
     border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--red-dark);
+    box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px rgba(139,0,0,0.6);
   }
 
-  .btn-row {
+  .progress-fill.triggered        { background: var(--gold); }
+  .progress-fill.triggered::after { background: var(--gold); box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px rgba(212,160,23,0.5); }
+
+  .milestone {
     display: flex;
-    gap: 10px;
-    margin-top: 1.75rem;
-  }
-
-  .btn {
-    flex: 1;
-    padding: 12px 16px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 18px;
     border: 1px solid var(--border);
     border-radius: 6px;
     background: var(--surface);
-    color: var(--text);
-    font-family: var(--font-mono);
+    transition: border-color 0.5s, background 0.5s;
+  }
+
+  .milestone.active {
+    border-color: var(--gold);
+    background: rgba(212,160,23,0.07);
+  }
+
+  .milestone-text {
+    font-family: 'DM Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
-    cursor: pointer;
-  }
-
-  .btn-primary {
-    border-color: var(--red-dark);
-    background: rgba(200,16,46,0.1);
-    color: #f08090;
-  }
-
-  .names-panel {
-    margin-top: 1.5rem;
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.6s ease, opacity 0.4s ease;
-  }
-
-  .names-panel.open {
-    max-height: 2000px;
-    opacity: 1;
-  }
-
-  .names-inner {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--surface);
-    overflow: hidden;
-  }
-
-  .names-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .names-title,
-  .names-count-badge {
-    font-family: var(--font-mono);
-    font-size: 11px;
-  }
-
-  .names-list {
-    list-style: none;
-  }
-
-  .names-list li {
-    display: flex;
-    gap: 14px;
-    padding: 9px 16px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .mp-num {
-    color: var(--red);
-    font-family: var(--font-mono);
-    min-width: 32px;
-    text-align: right;
-  }
-
-  .mp-name {
-    font-family: var(--font-body);
-  }
-
-  .footer {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .footer p {
-    font-family: var(--font-mono);
-    font-size: 10px;
     color: var(--muted);
+    transition: color 0.5s;
   }
 
-  @media (max-width: 480px) {
-    .btn-row {
-      flex-direction: column;
-    }
+  .milestone.active .milestone-text { color: var(--gold); }
 
-    .progress-meta {
-      flex-direction: column;
-      gap: 2px;
-    }
+  .timestamp {
+    margin-top: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    color: var(--muted);
   }
 </style>
 </head>
 <body>
 
-<div class="widget">
-
-  <div class="header">
-    <div class="rose">🌹</div>
-    <div class="header-text">
-      <div class="label-live">
-        <div class="dot"></div>
-        Live tracker
-      </div>
-      <h1>Labour MPs calling for Keir Starmer to resign</h1>
-      <div class="last-updated" id="last-updated">Fetching data…</div>
-    </div>
+  <div class="live-badge">
+    <div class="dot"></div>
+    Live tracker
   </div>
 
-  <div class="count-block">
-    <div class="count-number" id="count-display">–</div>
-    <div class="count-label">
-      <strong>Labour MPs</strong> have publicly called on
-      <strong>Keir Starmer</strong> to resign as Prime Minister
-    </div>
+  <div class="headline">Labour MPs calling for Keir Starmer to resign</div>
+
+  <div class="count-number" id="count-display">–</div>
+
+  <div class="subline">
+    <strong>Labour MPs</strong> have publicly called on
+    <strong>Keir Starmer</strong> to resign as Prime Minister
   </div>
 
   <div class="progress-section">
     <div class="progress-meta">
-      <div class="progress-meta-left">Leadership contest threshold</div>
-      <div class="progress-meta-right"><span id="pct-display">0</span> of 81 MPs</div>
+      <span>Leadership contest threshold</span>
+      <span><span id="pct-display">0</span>&thinsp;/&thinsp;81</span>
     </div>
-
     <div class="progress-track">
       <div class="progress-fill" id="progress-fill" style="width:0%"></div>
     </div>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn btn-primary" id="toggle-names-btn" onclick="toggleNames()">
-      Show names
-    </button>
-
-    <button class="btn" onclick="refreshData()">
-      Refresh
-    </button>
-  </div>
-
-  <div class="names-panel" id="names-panel">
-    <div class="names-inner">
-
-      <div class="names-header">
-        <span class="names-title">MPs on record</span>
-        <span class="names-count-badge" id="names-badge">0</span>
-      </div>
-
-      <div id="names-body"></div>
-
+    <div class="milestone" id="milestone">
+      <span class="milestone-text" id="milestone-text">81 MPs needed to trigger a leadership contest</span>
     </div>
   </div>
 
-  <div class="footer">
-    <p>Data sourced from public records & press reports</p>
-    <p>Auto-refresh: 60s</p>
-  </div>
-
-</div>
+  <div class="timestamp" id="last-updated">Fetching data…</div>
 
 <script>
-  const SHEET_ID = '1HRkxPrpNxKeMTVxtl38cdRqTghOKH_jE31PcF1jGpb8';
+  const SHEET_ID   = '1HRkxPrpNxKeMTVxtl38cdRqTghOKH_jE31PcF1jGpb8';
   const SHEET_NAME = 'Sheet1';
-
-  const THRESHOLD = 81;
-
-  let mpNames = [];
-  let panelOpen = false;
+  const THRESHOLD  = 81;
 
   async function fetchSheet() {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}&tq=${encodeURIComponent('select A')}`;
-
-    const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
-    }
-
-    const raw = await res.text();
-
-    const json = JSON.parse(
-      raw.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, '')
-    );
-
-    const rows = (json.table && json.table.rows)
-      ? json.table.rows
-      : [];
-
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const raw  = await res.text();
+    const json = JSON.parse(raw.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, ''));
+    const rows = (json.table && json.table.rows) ? json.table.rows : [];
     return rows
       .map(r => r.c && r.c[0] && r.c[0].v ? String(r.c[0].v).trim() : null)
       .filter(Boolean)
@@ -384,65 +238,37 @@
   }
 
   function updateUI(names) {
-    mpNames = names;
-
     const count = names.length;
+    const el    = document.getElementById('count-display');
+    const prev  = parseInt(el.textContent) || 0;
 
-    document.getElementById('count-display').textContent = count;
+    el.textContent = count;
+    if (count !== prev && prev > 0) {
+      el.classList.add('bump');
+      setTimeout(() => el.classList.remove('bump'), 500);
+    }
 
-    const pct = Math.min(100, (count / THRESHOLD) * 100);
+    document.getElementById('progress-fill').style.width = Math.min(100, (count / THRESHOLD) * 100) + '%';
+    document.getElementById('pct-display').textContent   = count;
 
-    document.getElementById('progress-fill').style.width = pct + '%';
+    const milestone     = document.getElementById('milestone');
+    const milestoneText = document.getElementById('milestone-text');
+    const fill          = document.getElementById('progress-fill');
 
-    document.getElementById('pct-display').textContent = count;
-
-    document.getElementById('names-badge').textContent = count;
+    if (count >= THRESHOLD) {
+      fill.classList.add('triggered');
+      milestone.classList.add('active');
+      milestoneText.textContent = '⚑  Leadership contest triggered';
+    } else {
+      fill.classList.remove('triggered');
+      milestone.classList.remove('active');
+      const remaining = THRESHOLD - count;
+      milestoneText.textContent = `${remaining} more MP${remaining === 1 ? '' : 's'} needed to trigger a leadership contest`;
+    }
 
     const now = new Date();
-
     document.getElementById('last-updated').textContent =
-      `Last updated ${now.toLocaleTimeString('en-GB', {
-        hour: '2-digit',
-        minute: '2-digit'
-      })}`;
-
-    if (panelOpen) {
-      renderList();
-    }
-  }
-
-  function renderList() {
-    const body = document.getElementById('names-body');
-
-    if (mpNames.length === 0) {
-      body.innerHTML = '<div style="padding:20px">No MPs recorded yet</div>';
-      return;
-    }
-
-    body.innerHTML = `
-      <ul class="names-list">
-        ${mpNames.map((name, i) => `
-          <li>
-            <span class="mp-num">${i + 1}.</span>
-            <span class="mp-name">${name}</span>
-          </li>
-        `).join('')}
-      </ul>
-    `;
-  }
-
-  function toggleNames() {
-    panelOpen = !panelOpen;
-
-    document.getElementById('names-panel')
-      .classList.toggle('open', panelOpen);
-
-    document.getElementById('toggle-names-btn')
-      .textContent = panelOpen ? 'Hide names' : 'Show names';
-
-    if (panelOpen) {
-      renderList();
-    }
+      `Updated ${now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} · ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`;
   }
 
   async function refreshData() {
@@ -450,14 +276,13 @@
       const names = await fetchSheet();
       updateUI(names);
     } catch (err) {
+      document.getElementById('last-updated').textContent = 'Could not fetch data — retrying…';
       console.error(err);
     }
   }
 
   refreshData();
-
   setInterval(refreshData, 60000);
 </script>
-
 </body>
 </html>
